@@ -1,12 +1,14 @@
 pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;
 
+import "./ownable.sol";
+
 contract InterfaceUsers {
     function viewUserStatus(uint _CPF) external view returns(bool HasVoted);
     function updateUserStatus(uint _CPF) external;
 }
 
-contract users {
+contract users is Ownable{
 
     struct Users {
         string Name;
