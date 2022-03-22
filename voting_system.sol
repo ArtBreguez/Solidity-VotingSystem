@@ -4,6 +4,7 @@ pragma experimental ABIEncoderV2;
 /// @title Blockchain voting system simulator
 /// @author Arthur Gonçalves Breguez
 /// @notice Use this contract with "users.sol", "candidates.sol" and "ownable.sol" to simulate a voting system on blockchain
+/// @dev ABIEncoderV2 Do not use on production
 import "./users_new.sol";
 import "./new_candidates.sol";
 import "./ownable.sol";
@@ -16,21 +17,21 @@ contract Voting is Ownable {
     /// @notice Emit a log when a new vote is made
     event LogNewVote(uint indexed _CPF, bool HasVoted);
 
-    /// @notice function to set the conctract address of "candidates.sol"
+    /// @notice Function to set the conctract address of "candidates.sol"
     /// @param _address Candidates contract address
-    /// @return true Confirmation that the address is set
+    /// @return True Confirmation that the address is set
     function setAddresToCandidadatesContract(address _address) external onlyOwner returns(bool contractSet){
         candidates_contract = _address;
         return true;
     }
-    /// @notice function to set the conctract address of "users.sol"
+    /// @notice Function to set the conctract address of "users.sol"
     /// @param _address Users contract address
-    /// @return true Confirmation that the address is set
+    /// @return True Confirmation that the address is set
     function setAddresToUsersContract(address _address) external onlyOwner returns(bool conctractSet){
         users_contract = _address;
         return true;
     }
-    /// @notice function View the candidate Name using the candidate Number
+    /// @notice Function View the candidate Name using the candidate Number
     /// @param _Number Candidate number
     /// @return Name Candidate name
     function viewCandidate(uint _Number) external view returns (string memory Name) {
@@ -43,8 +44,8 @@ contract Voting is Ownable {
     function vote(uint _CPF, uint _CandidateNumber) external{
         InterfaceCandidates candidate = InterfaceCandidates(candidates_contract);
         InterfaceUsers user = InterfaceUsers(users_contract);
-        require(user.viewUserStatus(_CPF) == false, "CPF NÃO ENCONTRADO!");
-        require(candidate.isCandidate(_CandidateNumber) == true, "CANDIDATO NÃO ENCONTRADO!");
+        require(user.viewUserStatus(_CPF) == false, "CPF NOT FOUND");
+        require(candidate.isCandidate(_CandidateNumber) == true, "CANDIDATE NOT FOUND");
         candidate.updateVotes(_CandidateNumber);
         user.updateUserStatus(_CPF);
         emit LogNewVote(
