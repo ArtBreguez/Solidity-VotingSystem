@@ -1,10 +1,10 @@
 pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;
 
-/// @title Users interface for blockchain voting system
+/// @title Interface Users
 /// @author Arthur Gonçalves Breguez
-/// @notice Use this contract as an interface for "users.sol"
-/// @dev ABIEncoderv2 experimental version, do not use this on production
+/// @notice Create and Manipulate users data
+/// @dev ABIEncoderV2 Do not use on production
 import "./ownable.sol";
 
 contract InterfaceUsers {
@@ -12,10 +12,10 @@ contract InterfaceUsers {
     function updateUserStatus(uint _CPF) external;
 }
 
-/// @title Users system simulator for blockchain voting
+/// @title CRUD Users
 /// @author Arthur Gonçalves Breguez
-/// @notice Use this contract with "candidates.sol", "voting_system.sol" and "ownable.sol" to simulate a voting system on blockchain
-/// @dev ABIEncoderv2 experimental version, do not use this on production
+/// @notice Create and Manipulate users data
+/// @dev ABIEncoderV2 Do not use on production
 contract users is Ownable{
 
     struct Users {
@@ -25,21 +25,33 @@ contract users is Ownable{
         bool HasVoted;
     }
 
+    constructor(address _voteContract) public {
+        voteContract = _voteContract;
+    }
+
+    /// @notice Make the function be called only by the "voting_system" contact
+    modifier onlyVote() {
+        require(msg.sender == voteContract, "BAD METHOD CALL");
+        _;
+    }
+
     mapping(uint => Users) usuarios;
 
     Users[] CurrentUsers;
+    address voteContract;
 
-    /// @notice Emit a log when a user is created, updated or deleted
+    /// @notice Emit  logs when an user is created, updated and deleted
     event LogNewUser(uint indexed _CPF, string Name, uint Age);
     event LogUpdateUser(uint indexed _CPF, string Name, uint Age);
     event LogDeletedUser(uint indexed _CPF, string Name);
 
-    /// @notice function to set the conctract address of "candidates.sol"
-    /// @param _address Candidates contract address
-    /// @return true Confirmation that the address is set
+    /// @notice Function to create a new user
+    /// @param _Name User name
+    /// @param _CPF User unique number
+    /// @param _Age User age
     function addUser(string calldata _Name, uint _CPF, uint _Age) external{
-        require(_CPF != 0, "O CPF NÃO PODE SER ZERO!");
-        require(usuarios[_CPF].CPF == 0, "O CPF JA ESTÁ CADASTRADO!");
+        require(_CPF != 0, "CPF CANNOT BE ZERO");
+        require(usuarios[_CPF].CPF == 0, "CPF ALREADY REGISTERED");
         Users memory usuario = Users(_Name, _CPF, _Age, false);
         usuarios[_CPF] = usuario;
         emit LogNewUser(
@@ -48,29 +60,30 @@ contract users is Ownable{
             _Age
         );
     }
-    /// @notice Get registered user information
-    /// @param _CPF User unique identifier
-    /// @return Name User full name
+
+    /// @notice Function to view user information
+    /// @param _CPF User CPF
+    /// @return Name User name
     /// @return Age User age
-    /// @return HasVoted If user has already voted or not
+    /// @return HasVoted If user has already voted
     function getUser(uint _CPF) external view returns(string memory Name, uint Age, bool HasVoted) {
         require(usuarios[_CPF].CPF != 0);
         return(usuarios[_CPF].Name, usuarios[_CPF].Age, usuarios[_CPF].HasVoted);
     }
-    /// @notice See if the user has already voted
-    /// @param _CPF User unique identifier
-    /// @return HasVoted If user has already voted or not
-    function viewUserStatus(uint _CPF) external returns(bool HasVoted) {
-        require(usuarios[_CPF].CPF != 0, "O USUARIO NÃO EXISTE!");
+    /// @notice Function to view if an user has already voted
+    /// @param _CPF User CPF
+    /// @return HasVoted If user has already voted
+    function viewUserStatus(uint _CPF) external view returns(bool HasVoted) {
+        require(usuarios[_CPF].CPF != 0, "USER DO NOT EXIST");
         return(usuarios[_CPF].HasVoted);
     }
-    /// @notice Update user name or age
+    /// @notice Function to update user name/age
     /// @param _Name User new name
-    /// @param _CPF User current CPF
+    /// @param _CPF User CPF
     /// @param _Age User new age
     function updateUser(string calldata _Name, uint _CPF, uint _Age) external {
-        require(_CPF != 0, "O CPF NÃO PODE SER ZERO!");
-        require(usuarios[_CPF].CPF != 0, "O USUARIO NÃO EXISTE!");
+        require(_CPF != 0, "CPF CANNOT BE ZERO");
+        require(usuarios[_CPF].CPF != 0, "USER DO NOT EXIST");
         usuarios[_CPF].Name = _Name;
         usuarios[_CPF].Age = _Age;
         emit LogUpdateUser(
@@ -79,16 +92,16 @@ contract users is Ownable{
             _Age
         );
     }
-    /// @notice Update user vote status
-    /// @param _CPF User unique identifier
-    function updateUserStatus(uint _CPF) external {
-        require(usuarios[_CPF].CPF != 0, "O USUARIO NÃO EXISTE!");
+    /// @notice Function to update user voting status
+    /// @param _CPF User CPF
+    function updateUserStatus(uint _CPF) external onlyVote{
+        require(usuarios[_CPF].CPF != 0, "USER DO NOT EXIST");
         usuarios[_CPF].HasVoted = true;
     }
-    /// @notice Delete user from contract
-    /// @param _CPF User unique identifier
+    /// @notice Function to delete an user
+    /// @param _CPF User CPF
     function deleteUser(uint _CPF) external {
-        require(usuarios[_CPF].CPF != 0, "O USUARIO NÃO EXISTE!");
+        require(usuarios[_CPF].CPF != 0, "USER DO NOT EXIST");
         delete usuarios[_CPF];
         emit LogDeletedUser(
             _CPF,
