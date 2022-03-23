@@ -5,8 +5,8 @@ pragma experimental ABIEncoderV2;
 /// @author Arthur Gonçalves Breguez
 /// @notice Use this contract with "users.sol", "candidates.sol" and "ownable.sol" to simulate a voting system on blockchain
 /// @dev ABIEncoderV2 Do not use on production
-import "./users_new.sol";
-import "./new_candidates.sol";
+import "./users.sol";
+import "./candidates.sol";
 import "./ownable.sol";
 
 contract Voting is Ownable {
@@ -19,17 +19,14 @@ contract Voting is Ownable {
 
     /// @notice Function to set the conctract address of "candidates.sol"
     /// @param _address Candidates contract address
-    /// @return True Confirmation that the address is set
-    function setAddresToCandidadatesContract(address _address) external onlyOwner returns(bool contractSet){
+    function setAddresToCandidadatesContract(address _address) external onlyOwner{
         candidates_contract = _address;
-        return true;
+        //return true;
     }
     /// @notice Function to set the conctract address of "users.sol"
     /// @param _address Users contract address
-    /// @return True Confirmation that the address is set
-    function setAddresToUsersContract(address _address) external onlyOwner returns(bool conctractSet){
+    function setAddresToUsersContract(address _address) external onlyOwner{
         users_contract = _address;
-        return true;
     }
     /// @notice Function View the candidate Name using the candidate Number
     /// @param _Number Candidate number
