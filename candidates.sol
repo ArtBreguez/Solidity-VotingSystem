@@ -35,9 +35,9 @@ contract candidates is Ownable {
         uint Votes;
     }
 
-    //constructor(address _voteContract) public {
-    //    voteContract = _voteContract;
-   // }
+    constructor(address _voteContract) public {
+        voteContract = _voteContract;
+    }
 
     /// @notice Make the function be called only by the "voting_system" contact
     modifier onlyVote() {
@@ -118,7 +118,7 @@ contract candidates is Ownable {
     /// @notice Function to view the number of votes of a candidate
     /// @param _Number Candidate number
     /// @return Votes Candidate number of votes
-     function viewCandidateVotes(uint _Number) external view returns(uint Votes) { //mais economico!
+     function viewCandidateVotesCached(uint _Number) external view returns(uint Votes) { //mais economico!
         require(candidates[_Number].Number != 0, "CANDIDATE DO NOT EXIST");
         uint Votes = candidates[_Number].Votes;
         return Votes;
