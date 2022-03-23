@@ -35,9 +35,9 @@ contract candidates is Ownable {
         uint Votes;
     }
 
-    constructor(address _voteContract) public {
-        voteContract = _voteContract;
-    }
+    //constructor(address _voteContract) public {
+    //    voteContract = _voteContract;
+   // }
 
     /// @notice Make the function be called only by the "voting_system" contact
     modifier onlyVote() {
@@ -58,7 +58,7 @@ contract candidates is Ownable {
     /// @notice Function to create a new candidate and add to list
     /// @param _Name Candidate name
     /// @param _Number Candidate number
-    function addCandidate1(string calldata _Name, uint _Number) external onlyOwner{
+    function addCandidate(string calldata _Name, uint _Number) external onlyOwner{
         require(_Number != 0, "CANDIDATE NUMBER CANNOT BE ZERO");
         require(candidates[_Number].Number == 0, "CANDIDATE ALREADY REGISTERED");
         Candidates memory candidate = Candidates(candidatesCount, _Name, _Number, 0);
@@ -118,10 +118,11 @@ contract candidates is Ownable {
     /// @notice Function to view the number of votes of a candidate
     /// @param _Number Candidate number
     /// @return Votes Candidate number of votes
-    function viewCandidateVotes(uint _Number) external view returns(uint Votes) {
+     function viewCandidateVotes(uint _Number) external view returns(uint Votes) { //mais economico!
         require(candidates[_Number].Number != 0, "CANDIDATE DO NOT EXIST");
-        return(candidates[_Number].Votes);
-    }
+        uint Votes = candidates[_Number].Votes;
+        return Votes;
+    }   
     /// @notice Function to delete a candidate
     /// @param _Number Candidate number
     function deleteCandidate(uint _Number) external onlyOwner{
