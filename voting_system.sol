@@ -41,7 +41,7 @@ contract Voting is Ownable {
     function vote(uint _CPF, uint _CandidateNumber) external{
         InterfaceCandidates candidate = InterfaceCandidates(candidates_contract);
         InterfaceUsers user = InterfaceUsers(users_contract);
-        require(user.viewUserStatus(_CPF) == false, "CPF NOT FOUND");
+        require(user.viewUserStatus(_CPF) == false, "USER ALREADY VOTED");
         require(candidate.isCandidate(_CandidateNumber) == true, "CANDIDATE NOT FOUND");
         candidate.updateVotes(_CandidateNumber);
         user.updateUserStatus(_CPF);
