@@ -17,13 +17,13 @@ contract Voting is Ownable {
     /// @notice Emit a log when a new vote is made
     event LogNewVote(uint indexed _CPF, bool HasVoted);
 
-    /// @notice Function to set the conctract address of "candidates.sol"
+    /// @notice Function to set the contract address of "candidates.sol"
     /// @param _address Candidates contract address
     function setAddresToCandidadatesContract(address _address) external onlyOwner{
         candidates_contract = _address;
         //return true;
     }
-    /// @notice Function to set the conctract address of "users.sol"
+    /// @notice Function to set the contract address of "users.sol"
     /// @param _address Users contract address
     function setAddresToUsersContract(address _address) external onlyOwner{
         users_contract = _address;
