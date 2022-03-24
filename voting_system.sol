@@ -21,7 +21,6 @@ contract Voting is Ownable {
     /// @param _address Candidates contract address
     function setAddresToCandidadatesContract(address _address) external onlyOwner{
         candidates_contract = _address;
-        //return true;
     }
     /// @notice Function to set the contract address of "users.sol"
     /// @param _address Users contract address
