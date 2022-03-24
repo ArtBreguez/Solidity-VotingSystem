@@ -35,7 +35,7 @@ contract users is Ownable{
         _;
     }
 
-    mapping(uint => Users) usuarios;
+    mapping(uint => Users) users;
 
     Users[] CurrentUsers;
     address voteContract;
@@ -51,9 +51,9 @@ contract users is Ownable{
     /// @param _Age User age
     function addUser(string calldata _Name, uint _CPF, uint _Age) external{
         require(_CPF != 0, "CPF CANNOT BE ZERO");
-        require(usuarios[_CPF].CPF == 0, "CPF ALREADY REGISTERED");
+        require(users[_CPF].CPF == 0, "CPF ALREADY REGISTERED");
         Users memory usuario = Users(_Name, _CPF, _Age, false);
-        usuarios[_CPF] = usuario;
+        users[_CPF] = usuario;
         emit LogNewUser(
             _CPF,
             _Name,
@@ -67,15 +67,15 @@ contract users is Ownable{
     /// @return Age User age
     /// @return HasVoted If user has already voted
     function getUser(uint _CPF) external view returns(string memory Name, uint Age, bool HasVoted) {
-        require(usuarios[_CPF].CPF != 0);
-        return(usuarios[_CPF].Name, usuarios[_CPF].Age, usuarios[_CPF].HasVoted);
+        require(users[_CPF].CPF != 0);
+        return(users[_CPF].Name, users[_CPF].Age, users[_CPF].HasVoted);
     }
     /// @notice Function to view if an user has already voted
     /// @param _CPF User CPF
     /// @return HasVoted If user has already voted
     function viewUserStatus(uint _CPF) external view returns(bool HasVoted) {
-        require(usuarios[_CPF].CPF != 0, "USER DO NOT EXIST");
-        return(usuarios[_CPF].HasVoted);
+        require(users[_CPF].CPF != 0, "USER DO NOT EXIST");
+        return(users[_CPF].HasVoted);
     }
     /// @notice Function to update user name/age
     /// @param _Name User new name
@@ -83,9 +83,9 @@ contract users is Ownable{
     /// @param _Age User new age
     function updateUser(string calldata _Name, uint _CPF, uint _Age) external {
         require(_CPF != 0, "CPF CANNOT BE ZERO");
-        require(usuarios[_CPF].CPF != 0, "USER DO NOT EXIST");
-        usuarios[_CPF].Name = _Name;
-        usuarios[_CPF].Age = _Age;
+        require(users[_CPF].CPF != 0, "USER DO NOT EXIST");
+        users[_CPF].Name = _Name;
+        users[_CPF].Age = _Age;
         emit LogUpdateUser(
             _CPF,
             _Name,
@@ -95,17 +95,17 @@ contract users is Ownable{
     /// @notice Function to update user voting status
     /// @param _CPF User CPF
     function updateUserStatus(uint _CPF) external onlyVote{
-        require(usuarios[_CPF].CPF != 0, "USER DO NOT EXIST");
-        usuarios[_CPF].HasVoted = true;
+        require(users[_CPF].CPF != 0, "USER DO NOT EXIST");
+        users[_CPF].HasVoted = true;
     }
     /// @notice Function to delete an user
     /// @param _CPF User CPF
     function deleteUser(uint _CPF) external {
-        require(usuarios[_CPF].CPF != 0, "USER DO NOT EXIST");
-        delete usuarios[_CPF];
+        require(users[_CPF].CPF != 0, "USER DO NOT EXIST");
+        delete users[_CPF];
         emit LogDeletedUser(
             _CPF,
-            usuarios[_CPF].Name
+            users[_CPF].Name
         );
     }
 }
