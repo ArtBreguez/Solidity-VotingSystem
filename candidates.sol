@@ -118,7 +118,7 @@ contract candidates is Ownable {
     /// @notice Function to view the number of votes of a candidate
     /// @param _Number Candidate number
     /// @return Votes Candidate number of votes
-     function viewCandidateVotesCached(uint _Number) external view returns(uint Votes) { //mais economico!
+     function viewCandidateVotes(uint _Number) external view returns(uint Votes) { 
         require(candidates[_Number].Number != 0, "CANDIDATE DO NOT EXIST");
         uint Votes = candidates[_Number].Votes;
         return Votes;
