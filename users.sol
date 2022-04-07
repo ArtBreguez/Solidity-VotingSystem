@@ -36,8 +36,7 @@ contract users is Ownable{
     }
 
     mapping(uint => Users) users;
-
-    Users[] CurrentUsers;
+    
     address voteContract;
 
     /// @notice Emit  logs when an user is created, updated and deleted
